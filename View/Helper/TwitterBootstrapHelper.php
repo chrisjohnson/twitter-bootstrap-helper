@@ -285,6 +285,12 @@ class TwitterBootstrapHelper extends AppHelper {
 				}
 			}
 			$input = $this->Form->input($options["field"], $opt);
+			if (isset($options["multiple"]) && $options["multiple"]=='checkbox') {
+				// this is a dirty hack, cakephp will wrap each checkbox in a div, and set the lables after the input
+				// bootstrap wants the checkbox wrapped in a label, and the text afterward
+				$input = str_replace(array('<label', '</label'), array('<span', '</span'), $input);
+				$input = str_replace(array('<div', '</div'), array('<label', '</label'), $input);
+			}
 			if (isset($options["checkbox_label"])) {
 				$input = $this->Form->label($options["field"], $input.' '.$options["checkbox_label"], array('class' => 'checkbox'));
 			}
