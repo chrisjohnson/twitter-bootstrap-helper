@@ -40,6 +40,13 @@ class TwitterBootstrapHelper extends AppHelper {
 		return $this->BootstrapForm->search($name, $options);
 	}
 
+	public function create($model = null, $options = array()) {
+		if (empty($options['class'])) {
+			$options['class'] = 'form-horizontal';
+		}
+		return $this->BootstrapForm->create($model, $options);
+	}
+
 	public function input($field, $options = array()) {
 		return $this->BootstrapForm->input($field, $options);
 	}
