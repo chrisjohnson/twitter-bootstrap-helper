@@ -91,6 +91,10 @@ class TwitterBootstrapHelper extends AppHelper {
 		return $this->BootstrapHtml->addCrumb($title, $url, $options);
 	}
 
+	public function addCrumb($title, $url, $options = array()) {
+		return $this->BootstrapHtml->addCrumb($title, $url, $options);
+	}
+
 	public function label($message = "", $style = "", $options = array()) {
 		return $this->Bootstrap->label($message, $style, $options);
 	}
