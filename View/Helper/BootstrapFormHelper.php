@@ -347,7 +347,7 @@ class BootstrapFormHelper extends FormHelper {
 	 * @access public
 	 * @return string
 	 */
-	public function radio($field, $options = array()) {
+	public function radio($field, $options = array(), $attributes = array()) {
 		if (is_array($field)) {
 			$options = $field;
 		} else {
@@ -360,12 +360,12 @@ class BootstrapFormHelper extends FormHelper {
 		unset($options["options"]);
 		$inputs = "";
 		$hiddenField = (isset($options['hiddenField']) && $options['hiddenField']);
+		$attributes = Set::merge(
+			array("label" => false, 'hiddenField' => $hiddenField),
+			$attributes
+		);
 		foreach ($opt as $key => $val) {
-			$input = parent::radio(
-				$options["field"],
-				array($key => $val),
-				array("label" => false, 'hiddenField' => $hiddenField)
-			);
+			$input = parent::radio($options["field"], array($key => $val), $attributes);
 			$id = array();
 			preg_match_all("/id=\"[a-zA-Z0-9_-]*\"/", $input, $id);
 			if (!empty($id[0])) {
