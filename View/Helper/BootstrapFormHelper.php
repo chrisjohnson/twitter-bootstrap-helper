@@ -365,6 +365,8 @@ class BootstrapFormHelper extends FormHelper {
 			$attributes
 		);
 		foreach ($opt as $key => $val) {
+			$checked = ($key === Re::pluck($options, '/value'));
+			$attributes['checked'] = $checked;
 			$input = parent::radio($options["field"], array($key => $val), $attributes);
 			$id = array();
 			preg_match_all("/id=\"[a-zA-Z0-9_-]*\"/", $input, $id);
