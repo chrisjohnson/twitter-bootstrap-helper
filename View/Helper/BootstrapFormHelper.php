@@ -230,7 +230,7 @@ class BootstrapFormHelper extends FormHelper {
 			$options['state'] = 'error';
 			$help_block = $this->Html->tag(
 				"span",
-				$this->error($options['field']),
+				$this->error($options['field'], null, array('escape' => (isset($options['escapeError']) && $options['escapeError'] === false) ? false : true)),
 				array("class" => "help-block")
 			);
 		}
