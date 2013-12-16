@@ -22,6 +22,8 @@ class BootstrapFormHelper extends FormHelper {
 		'field'
 	);
 
+	private $_radioDefaults = array();
+
 	/**
 	 * basic_input
 	 *
@@ -59,9 +61,15 @@ class BootstrapFormHelper extends FormHelper {
 			"label" => "",
 			"append" => false,
 			"prepend" => false,
-			"state" => false
+			"state" => false,
+			"class" => 'form-control',
 		);
-		return array_merge($defaults, $options);
+		$r = array_merge($defaults, $options);
+		if (isset($r['class']) && !strstr($r['class'], 'form-control') && (isset($r['type']) && $r['type'] != 'checkbox' && $r['type'] != 'radio') && (!isset($r['append_form_control']) || $r['append_form_control'] !== false)) {
+			$r['class'] .= ' form-control';
+		}
+
+		return $r;
 	}
 
 	/**
@@ -83,7 +91,7 @@ class BootstrapFormHelper extends FormHelper {
 				"checkbox"
 			);
 		} else {
-			$class = (!$basic) ? "control-label" : null;
+			$class = (!$basic) ? "control-label col-sm-4" : null;
 			if (!empty($options["label"])) {
 				$options["label"] = parent::label(
 					$options["field"],
@@ -200,6 +208,10 @@ class BootstrapFormHelper extends FormHelper {
 	 * @return string
 	 */
 	public function input($field, $options = array()) {
+		$options = Set::merge(
+			$this->_inputDefaults,
+			$options
+		);
 		$options = $this->_parseInputOptions($field, $options);
 		if (!isset($options['field'])) { return ''; }
 		$out = $help_inline = $help_block = '';
@@ -210,19 +222,24 @@ class BootstrapFormHelper extends FormHelper {
 		} else {
 			$options["field"] = "{$model}.{$options["field"]}";
 		}*/
+		$label_class = "control-label col-sm-4";
+		if (isset($options['label_class'])) {
+			$label_class = $options['label_class'];
+			$options['label_class'] = null;
+		}
 		if ($options['label'] === false) {
 			$options['label'] = '';
 		} else if (!empty($options['label'])) {
 			$options['label'] = $this->label(
 				$options['field'],
 				$options['label'],
-				"control-label"
+				$label_class
 			);
 		} else {
 			$options['label'] = $this->label(
 				$options['field'],
 				null,
-				"control-label"
+				$label_class
 			);
 		}
 		list($help_inline, $help_block) = $this->_helpMarkup($options);
@@ -235,20 +252,36 @@ class BootstrapFormHelper extends FormHelper {
 			);
 		}
 		$options["input"] = $this->_combineInput($options);
-		$input = $this->Html->tag(
-			"div",
-			$options['input'].$help_inline.$help_block,
-			array("class" => "controls")
-		);
-		$wrap_class = "control-group";
-		if ($options["state"] !== false) {
-			$wrap_class = "{$wrap_class} {$options["state"]}";
+		if (isset($options['div']) && $options['div'] === false) {
+			$input = $options['input'].$help_inline.$help_block;
+		} else {
+			$div_class = 'col-sm-8';
+			if (isset($options['div'])) {
+				$div_class = $options['div'];
+			}
+			$input = $this->Html->tag(
+				"div",
+				$options['input'].$help_inline.$help_block,
+				array("class" => $div_class)
+			);
 		}
-		return $this->Html->tag(
-			"div",
-			$options['label'].$input,
-			array("class" => $wrap_class)
-		);
+		if (isset($options['wrapper']) && $options['wrapper'] === false) {
+			return $options['label'].$input;
+		} else {
+			if (!isset($options['wrapper'])) {
+				$wrap_class = 'form-group';
+			} else {
+				$wrap_class = $options['wrapper'];
+			}
+			if ($options["state"] !== false) {
+				$wrap_class = "{$wrap_class} {$options["state"]}";
+			}
+			return $this->Html->tag(
+				"div",
+				$options['label'].$input,
+				array("class" => $wrap_class)
+			);
+		}
 	}
 
 	/**
@@ -359,11 +392,20 @@ class BootstrapFormHelper extends FormHelper {
 		$opt = $options["options"];
 		unset($options["options"]);
 		$inputs = "";
+		$options = Set::merge(
+			$this->_radioDefaults,
+			$options
+		);
 		$hiddenField = (isset($options['hiddenField']) && $options['hiddenField']);
 		$attributes = Set::merge(
 			array("label" => false, 'hiddenField' => $hiddenField),
 			$attributes
 		);
+		$radio_label_class = "radio";
+		if (isset($options['radio_label_class'])) {
+			$radio_label_class = $options['radio_label_class'];
+			$options['radio_label_class'] = null;
+		}
 		foreach ($opt as $key => $val) {
 			$checked = ($key === Re::pluck($options, '/value'));
 			$attributes['checked'] = $checked;
@@ -377,7 +419,7 @@ class BootstrapFormHelper extends FormHelper {
 				$input = $this->Html->tag(
 					"label",
 					$input,
-					array("class" => "radio", "for" => $id)
+					array("class" => $radio_label_class, "for" => $id)
 				);
 			}
 			$inputs .= $input;
@@ -453,6 +495,24 @@ class BootstrapFormHelper extends FormHelper {
 			$options["class"] = $class;
 		}
 		return $options;
+	}
+
+	/**
+	 * Set/Get inputDefaults for form elements
+	 *
+	 * @param array $defaults New default values
+	 * @param boolean Merge with current defaults
+	 * @return array inputDefaults
+	 */
+	public function radioDefaults($defaults = null, $merge = false) {
+		if (!is_null($defaults)) {
+			if ($merge) {
+				$this->_radioDefaults = array_merge($this->_radioDefaults, (array)$defaults);
+			} else {
+				$this->_radioDefaults = (array)$defaults;
+			}
+		}
+		return $this->_radioDefaults;
 	}
 
 }

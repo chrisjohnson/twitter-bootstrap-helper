@@ -36,6 +36,22 @@ class TwitterBootstrapHelper extends AppHelper {
 		return $this->BootstrapForm->inputAddon($content, $input, $type);
 	}
 
+	public function select($fieldName, $options = array(), $attributes = array()) {
+		return $this->BootstrapForm->select($fieldName, $options, $attributes);
+	}
+
+	public function textarea($fieldName, $options = array()) {
+		return $this->BootstrapForm->textarea($fieldName, $options);
+	}
+
+	public function radioDefaults($defaults, $merge = false) {
+		return $this->BootstrapForm->radioDefaults($defaults, $merge);
+	}
+
+	public function inputDefaults($defaults, $merge = false) {
+		return $this->BootstrapForm->inputDefaults($defaults, $merge);
+	}
+
 	public function search($name = null, $options = array()) {
 		return $this->BootstrapForm->search($name, $options);
 	}

@@ -150,24 +150,17 @@ class BootstrapHtmlHelper extends HtmlHelper {
 		$crumbs = $this->getCrumbs("%%");
 		$crumbs = explode("%%", $crumbs);
 		$out = "";
-		$divider = "/";
 		if (isset($options["class"])) {
 			$options["class"] .= " breadcrumb";
 		} else {
 			$options["class"] = "breadcrumb";
 		}
-		if (isset($options["divider"])) {
-			$divider = $options["divider"];
-			unset($options["divider"]);
-		}
 		for ($i = 0; $i < count($crumbs); $i += 1) {
 			$opt = array();
-			$d = $this->tag("span", $divider, array("class" => "divider"));
 			if (!isset($crumbs[$i + 1])) {
 				$opt["class"] = "active";
-				$d = "";
 			}
-			$out .= $this->tag("li", $crumbs[$i] . $d, $opt);
+			$out .= $this->tag("li", $crumbs[$i], $opt);
 		}
 		return $this->tag("ul", $out, $options);
 	}
