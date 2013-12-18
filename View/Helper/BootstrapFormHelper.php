@@ -54,6 +54,7 @@ class BootstrapFormHelper extends FormHelper {
 		} else {
 			$options["field"] = $field;
 		}
+		$form_control_class = (!isset($options['append_form_control']) || $options['append_form_control'] !== false) ? 'form-control' : '';
 		$defaults = array(
 			"type" => "",
 			"help_inline" => "",
@@ -62,11 +63,14 @@ class BootstrapFormHelper extends FormHelper {
 			"append" => false,
 			"prepend" => false,
 			"state" => false,
-			"class" => 'form-control',
+			"class" => $form_control_class,
 		);
 		$r = array_merge($defaults, $options);
-		if (isset($r['class']) && !strstr($r['class'], 'form-control') && (isset($r['type']) && $r['type'] != 'checkbox' && $r['type'] != 'radio') && (!isset($r['append_form_control']) || $r['append_form_control'] !== false)) {
-			$r['class'] .= ' form-control';
+		if (!empty($form_control_class) && isset($r['class']) && !strstr($r['class'], $form_control_class)) {
+			if (isset($r['type']) && $r['type'] != 'checkbox' && $r['type'] != 'radio') {
+				// If the class doesn't have $form_control_class, and it's not for a checkbox or radio, append $form_control_class
+				$r['class'] .= ' ' . $form_control_class;
+			}
 		}
 
 		return $r;
