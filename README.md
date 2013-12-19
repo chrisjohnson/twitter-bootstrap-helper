@@ -1,11 +1,11 @@
 # Twitter Bootstrap CakePHP Helper
 
-CakePHP helper for rendering bootstrap appropriate markup. Uses the Twitter Bootstrap 2.0.
+CakePHP helper for rendering bootstrap appropriate markup. Uses the Twitter Bootstrap 3.0.
 
 ## Requirements
 
 * [CakePHP 2.0](https://github.com/cakephp/cakephp)
-* [Twitter Bootstrap CSS 2.0](http://twitter.github.com/bootstrap/)
+* [Twitter Bootstrap CSS 3.0](http://twitter.github.com/bootstrap/)
 * *Optional* [Twitter Bootstrap JS](http://twitter.github.com/bootstrap/javascript.html)
 
 ## Installation
